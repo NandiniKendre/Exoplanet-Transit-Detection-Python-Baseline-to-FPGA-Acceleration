@@ -1,0 +1,15 @@
+metric,value
+n_observations,1350.0
+observation_span_days,27.0
+trial_periods,400.0
+trial_durations,5.0
+true_period_days,3.7
+detected_period_days,3.69424
+absolute_period_error_days,0.00576
+relative_period_error_percent,0.1556756756756757
+true_duration_days,0.12
+detected_duration_days,0.12
+true_transit_depth,0.01
+estimated_transit_depth,0.00922
+detection_score,297.2271
+runtime_seconds_reported,7.0264

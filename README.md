@@ -130,10 +130,6 @@ These metrics will be evaluated as the project develops; they are not all measur
 4. The reported Python runtime is environment-specific and cannot be compared directly with a future FPGA runtime without a controlled benchmark.
 5. The project does not claim novelty until a systematic literature review establishes the relevant research gap.
 
-## License
-
-This project is released under the MIT License. See `LICENSE`.
-
 ## Acknowledgements
 
 This project is an independent research and learning effort at the intersection of astronomy, signal processing, and digital hardware design. NASA MAST and the NASA Exoplanet Archive are planned sources for future real-data experiments.

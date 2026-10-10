@@ -1,140 +1,128 @@
-# Exoplanet Transit Detection Using Verilog and FPGA
+# 🌌 Exoplanet Transit Detection Using Verilog and FPGA
 
-A Verilog RTL-based research project for **exoplanet transit detection using a simplified Box Least Squares (BLS)-style search**. The project combines a Python reference baseline with a synthesizable digital hardware architecture, RTL simulation in Xilinx Vivado, and future FPGA prototyping and ASIC-oriented design-space exploration.
+🔭 A hardware-oriented research project exploring **exoplanet transit detection using a simplified Box Least Squares (BLS)-style search**. The project combines Python-based algorithm development, Verilog RTL design, Xilinx Vivado simulation, and future FPGA acceleration and ASIC design-space exploration.
 
-> **Current status:** Synthetic-data experiments and Verilog RTL simulation. Real Kepler/TESS validation, on-board FPGA testing, and ASIC implementation remain future work unless explicitly documented in subsequent results.
+> ⚠️ **Current Status:** Initial synthetic-data experiments and Verilog RTL simulation. Validation using real Kepler/TESS light curves, FPGA board testing, and ASIC implementation are planned future stages.
 
-## Project Overview
+## 🪐 Project Overview
 
-An exoplanet can be detected when it passes in front of its host star, causing a small, periodic decrease in measured stellar brightness. A light curve records these brightness measurements over time.
+When an exoplanet passes in front of its host star, it causes a small, periodic decrease in the observed stellar brightness. This phenomenon is known as a **transit**.
 
-The Box Least Squares (BLS) method searches for periodic, approximately box-shaped dips in a light curve by evaluating candidate orbital periods and transit durations.
+📈 A light curve records stellar brightness over time, and the Box Least Squares (BLS) method searches for periodic, transit-shaped dips to identify potential exoplanet candidates.
 
-This project investigates how the computationally intensive parts of transit detection can be mapped to digital hardware using **Verilog HDL**, with emphasis on deterministic processing, parallel computation, fixed-point arithmetic, memory organization, and hardware resource efficiency.
+This project explores how transit-detection computations can be implemented using **Verilog HDL** and mapped to digital hardware.
 
-The long-term objective is to develop an FPGA-accelerated transit-search architecture and investigate its potential for ASIC implementation.
+The long-term goal is to develop an FPGA-accelerated transit-search architecture and investigate its suitability for ASIC implementation.
 
-## Project Objectives
+## 🎯 Project Objectives
 
-- Develop a Python reference implementation for synthetic transit generation and period searching.
-- Design a Verilog RTL architecture for hardware-oriented transit detection.
-- Verify RTL functionality using testbenches and waveform analysis in Xilinx Vivado.
-- Compare hardware outputs against known synthetic signal parameters and software reference results.
-- Investigate fixed-point precision, parallelism, throughput, latency, and resource utilization.
-- Progress toward FPGA implementation, followed by ASIC-oriented synthesis and design-space exploration.
+- 🐍 Develop a Python reference implementation for synthetic transit generation and period searching.
+- 💻 Design a Verilog RTL architecture for hardware-oriented transit detection.
+- 🧪 Verify RTL functionality through testbenches and waveform analysis in Xilinx Vivado.
+- 🔍 Compare RTL outputs against known synthetic parameters and software reference results.
+- ⚡ Investigate fixed-point arithmetic, parallelism, latency, and throughput.
+- 📊 Evaluate FPGA resource utilization, timing, and power estimates.
+- 🏭 Explore ASIC-oriented synthesis and hardware design-space trade-offs.
 
-## System Architecture
-
-The intended development flow is:
+## 🏗️ System Architecture
 
 ```text
-Synthetic Light-Curve Generation
-              |
-              v
-     Python BLS Reference
-              |
-              v
-     Verilog RTL Design
-              |
-              v
-     Vivado RTL Simulation
-              |
-              v
-  Functional and Numerical Checks
-              |
-              v
-    FPGA Synthesis and Timing
-              |
-              v
-     FPGA Hardware Validation
-              |
-              v
-  ASIC-Oriented Design Exploration
+🌟 Synthetic Light-Curve Generation
+                 |
+                 v
+🐍 Python BLS Reference Model
+                 |
+                 v
+💻 Verilog RTL Architecture
+                 |
+                 v
+🧪 Vivado RTL Simulation
+                 |
+                 v
+🔍 Functional Verification
+                 |
+                 v
+⚡ FPGA Synthesis & Timing Analysis
+                 |
+                 v
+🔬 FPGA Hardware Validation
+                 |
+                 v
+🏭 ASIC Design-Space Exploration
 ```
 
-The Python implementation provides a reference for the algorithm. The Verilog implementation explores how the selected computations can be organized into clocked hardware.
+*Note: This is the planned development flow. Each stage will be marked complete after its implementation and verification.*
 
-The precise division of computation between software and RTL will depend on the current hardware implementation. The complete BLS search should not be considered implemented in hardware unless all required search stages are present in the RTL.
+## 🐍 1. Python Reference Baseline
 
-## 1. Python Reference Baseline
+The initial experiment uses a synthetic stellar light curve with a known periodic transit signal and Gaussian noise.
 
-The initial experiment uses a synthetic light curve with a known periodic transit signal and Gaussian noise.
-
-| Parameter | Value |
+| Parameter | Result |
 |---|---:|
-| Number of observations | 1,350 |
-| Observation span | 27 days |
-| Trial periods | 400 |
-| Trial durations | 5 |
-| Injected orbital period | 3.70000 days |
-| Detected period | 3.69424 days |
-| Absolute period error | 0.00576 days |
-| Relative period error | Approximately 0.156% |
-| Injected transit depth | 1.000% |
-| Estimated transit depth | 0.922% |
-| Detected duration | 0.12000 days |
-| Original Python search runtime | Approximately 7.03 seconds |
+| 📊 Number of observations | 1,350 |
+| 🗓️ Observation span | 27 days |
+| 🔎 Trial periods | 400 |
+| ⏱️ Trial durations | 5 |
+| 🪐 Injected orbital period | 3.70000 days |
+| 🎯 Detected period | 3.69424 days |
+| 📉 Absolute period error | 0.00576 days |
+| 📐 Relative period error | ~0.156% |
+| 🌑 Injected transit depth | 1.000% |
+| 📊 Estimated transit depth | 0.922% |
+| ⏳ Detected duration | 0.12000 days |
+| 🖥️ Python search runtime | ~7.03 seconds |
 
-These results are preliminary and come from one synthetic-data experiment. The runtime is environment-specific and is not a hardware speedup benchmark.
+✅ The initial synthetic experiment recovered a period close to the injected value.
 
-The detection score is implementation-specific and should not be interpreted as the probability that an exoplanet exists.
+⚠️ These are preliminary results from a simplified BLS-style implementation. The runtime depends on the execution environment, and the result does not establish general detection reliability.
 
-## 2. Verilog RTL Implementation
+## 💻 2. Verilog RTL Implementation
 
-The hardware-design stage translates selected transit-detection computations into a clock-driven RTL architecture.
+The hardware-design stage focuses on translating selected transit-detection computations into clock-driven digital logic.
 
-**Target development environment:** Xilinx Vivado  
-**Hardware description language:** Verilog HDL  
-**Verification method:** RTL testbench simulation with waveform and numerical-result inspection
-
-The current RTL experiment uses the following synthetic test configuration:
-
-| Parameter | RTL simulation configuration |
+| Configuration | Value |
 |---|---:|
-| Clock frequency | 100 MHz |
-| Clock period | 10 ns |
-| Number of light-curve samples | 1,350 |
-| Injected orbital period | 3.70 days |
-| Injected transit duration | 0.12 days |
-| Injected transit depth | 1% |
-| Input data | Synthetic |
+| 🛠️ HDL | Verilog |
+| 🧰 Development environment | Xilinx Vivado |
+| ⏰ Simulation clock | 100 MHz |
+| 🕒 Clock period | 10 ns |
+| 📊 Light-curve samples | 1,350 |
+| 🪐 Injected orbital period | 3.70 days |
+| 🌑 Injected transit depth | 1% |
+| ⏱️ Injected transit duration | 0.12 days |
+| 🧪 Test data | Synthetic |
 
-The simulation stimulus injects a known transit signal and evaluates the RTL processing sequence. These input parameters describe the test scenario; they do not independently establish that every parameter is recovered accurately by the hardware.
+### 🔬 RTL Verification Goals
 
-### RTL verification goals
+- ✅ Verify reset and initialization behavior.
+- 🔄 Validate control logic and state transitions.
+- ➗ Check arithmetic operations and intermediate results.
+- 📥 Verify input-sample sequencing.
+- 🎯 Validate candidate-period and transit-score calculations implemented in RTL.
+- 📊 Compare simulated results against expected values.
+- ⏱️ Measure clock cycles and processing latency.
 
-- Verify reset behavior and initialization.
-- Confirm correct input-sample sequencing.
-- Validate the controller and processing state transitions.
-- Check arithmetic operations and intermediate values.
-- Verify candidate-period or transit-score calculations implemented in RTL.
-- Compare RTL outputs against a software reference or independently calculated expected values.
-- Measure clock cycles and simulation latency for the implemented hardware operations.
+**Important:** A complete hardware BLS implementation requires verified RTL for the relevant search stages, including period evaluation, duration evaluation, score calculation, and best-candidate selection. Any stages not yet implemented remain future work.
 
-**Important:** The complete BLS search is only considered hardware-implemented when period evaluation, duration evaluation, score calculation, and best-candidate selection are implemented and verified in RTL. Any stages not yet implemented will remain part of the roadmap.
+## 🧪 3. Vivado Simulation and Performance Evaluation
 
-## 3. Vivado Simulation and Hardware Metrics
+Vivado RTL simulation is used to verify the functional behavior of the hardware design.
 
-Vivado RTL simulation establishes functional behavior but does not, by itself, establish FPGA hardware performance.
+Planned evaluation metrics include:
 
-The following metrics will be recorded as the implementation progresses:
-
-| Metric | Evaluation method |
+| Metric | Evaluation |
 |---|---|
-| Functional correctness | Testbench and reference-output comparison |
-| Period recovery error | Compare detected and injected periods |
-| Transit-depth error | Compare estimated and injected depths |
-| Clock cycles per search | RTL simulation or cycle-count analysis |
-| Processing latency | Clock cycles × clock period |
-| Throughput | Valid outputs processed per unit time |
-| LUT and FF utilization | FPGA synthesis reports |
-| BRAM and DSP utilization | FPGA synthesis reports |
-| Maximum operating frequency | Timing analysis |
-| Power estimate | Vivado power analysis, when supported |
+| ✅ Functional correctness | Testbench and reference comparison |
+| 🎯 Period recovery | Detected versus injected period |
+| 🌑 Transit-depth accuracy | Estimated versus injected depth |
+| 🔄 Cycle count | Clock cycles per operation or search |
+| ⏱️ Latency | Clock cycles × clock period |
+| 🚀 Throughput | Valid results per unit time |
+| 🧩 FPGA resources | LUT, FF, BRAM, and DSP utilization |
+| ⚡ Timing | Timing analysis and maximum frequency |
+| 🔋 Power | Vivado power estimation, where supported |
 
-No FPGA speedup, resource utilization, timing closure, or power result is claimed here without the corresponding implementation report.
-
-### Latency calculation
+### ⏰ Clock and Latency Calculation
 
 For a 100 MHz clock:
 
@@ -142,170 +130,163 @@ For a 100 MHz clock:
 T_{\mathrm{clk}}=\frac{1}{100\,\mathrm{MHz}}=10\,\mathrm{ns}
 \]
 
-If a measured operation takes \(N\) clock cycles, its nominal cycle-based latency is:
+If an operation takes \(N\) clock cycles:
 
 \[
 T_{\mathrm{latency}}=N \times 10\,\mathrm{ns}
 \]
 
-This calculation describes the specified clock-cycle count. Actual board-level performance requires synthesis, timing analysis, and hardware validation.
+📌 This is a cycle-based calculation. Actual FPGA performance must be established through synthesis, timing analysis, and hardware testing.
 
-## 4. Repository Structure
+## 📁 4. Repository Structure
 
 ```text
-exoplanet-transit-detection/
-├── README.md
-├── python/
+verilog-exoplanet-transit-detection/
+├── 📄 README.md
+├── 🐍 python/
 │   ├── exoplanet_bls_baseline.py
 │   └── requirements.txt
-├── rtl/
+├── 💻 rtl/
 │   ├── README.md
-│   ├── top_module.v
-│   └── [additional RTL modules]
-├── testbench/
-│   ├── tb_exoplanet_detection.v
-│   └── [additional testbenches]
-├── data/
+│   └── [Verilog RTL modules]
+├── 🧪 testbench/
+│   └── [Verilog testbenches]
+├── 📂 data/
 │   └── README.md
-├── results/
+├── 📊 results/
 │   ├── baseline_metrics.csv
 │   ├── light_curve.png
 │   ├── periodogram.png
-│   └── [RTL simulation reports]
-└── docs/
+│   └── [RTL simulation results]
+└── 📚 docs/
     └── architecture.md
 ```
 
-*The tree above is a suggested structure. Keep only files and directories that actually exist in the repository, and replace example RTL filenames with the names used by your design.*
+📝 This is a suggested structure. Update the tree to match the files actually present in your repository.
 
-## 5. Running the Python Baseline
+## ▶️ 5. Running the Python Baseline
 
-Create and activate a virtual environment.
+Create a virtual environment.
 
-**Windows:**
+**🪟 Windows:**
 
 ```bat
 python -m venv .venv
 .venv\Scripts\activate
 ```
 
-**Linux/macOS:**
+**🐧 Linux/macOS:**
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 ```
 
-Install the required packages and execute the baseline:
+Install dependencies and run:
 
 ```bash
 python -m pip install -r python/requirements.txt
 python python/exoplanet_bls_baseline.py
 ```
 
-The exact commands depend on the actual location of the script and dependency file in the repository. Generated figures and CSV results should be saved in the configured results directory.
+📈 Generated figures and CSV files will be saved in the configured results directory.
 
-## 6. Running the Verilog Simulation
+## 🧰 6. Running the Verilog Simulation in Vivado
 
-1. Open Xilinx Vivado.
-2. Create or open the RTL project.
-3. Add the Verilog source files from `rtl/`.
-4. Add the testbench files from `testbench/`.
-5. Configure the testbench as the simulation top module.
-6. Run **Run Behavioral Simulation**.
-7. Inspect the waveform, reset sequence, state transitions, counters, and output signals.
-8. Compare the simulated outputs against expected values.
-9. Record the simulation configuration and measured results.
+1. 🛠️ Open or create a project in Xilinx Vivado.
+2. 📂 Add the Verilog source files.
+3. 🧪 Add the testbench files.
+4. 🎯 Set the testbench as the simulation top module.
+5. ▶️ Run **Run Behavioral Simulation**.
+6. 📉 Inspect waveforms, state transitions, counters, and output signals.
+7. 🔍 Compare actual outputs against expected results.
+8. 💾 Save simulation logs, waveform captures, and verification results.
 
-For reproducible experiments, save the testbench, simulation logs, waveform captures, and expected-versus-actual result comparisons in the repository.
+## 🗺️ 7. Research Roadmap
 
-## 7. Research Roadmap
-
-### Phase 1 — Software validation
+### 🐍 Phase 1: Software Baseline
 
 - [x] Generate a synthetic stellar light curve.
-- [x] Implement an initial simplified BLS-style search.
-- [x] Recover a period close to the injected period in the initial experiment.
-- [ ] Compare against Astropy's trusted BLS implementation.
-- [ ] Evaluate recovery across multiple noise levels and transit depths.
+- [x] Implement an initial BLS-style search.
+- [x] Recover a period close to the injected value.
+- [ ] Validate against Astropy BLS.
+- [ ] Evaluate multiple noise levels and transit depths.
 
-### Phase 2 — Verilog RTL development
+### 💻 Phase 2: Verilog RTL Development
 
 - [x] Establish a synthetic RTL simulation scenario.
 - [x] Run the initial Vivado RTL simulation.
-- [ ] Document the verified RTL module hierarchy.
-- [ ] Verify reset, control logic, arithmetic, and candidate selection.
-- [ ] Compare RTL results against an independent reference.
-- [ ] Evaluate numerical precision and fixed-point arithmetic.
-- [ ] Measure cycle counts and end-to-end RTL latency.
+- [ ] Document the RTL module hierarchy.
+- [ ] Verify arithmetic and control logic.
+- [ ] Compare RTL outputs against the software reference.
+- [ ] Evaluate fixed-point precision.
+- [ ] Measure cycle count and latency.
 - [ ] Test edge cases and parameter variations.
 
-### Phase 3 — FPGA implementation
+### ⚡ Phase 3: FPGA Implementation
 
 - [ ] Synthesize the verified RTL design.
 - [ ] Evaluate LUT, FF, BRAM, and DSP utilization.
-- [ ] Perform timing analysis and assess maximum operating frequency.
-- [ ] Optimize the datapath and memory architecture.
-- [ ] Implement the design on a selected FPGA board.
-- [ ] Validate results using reproducible test vectors.
-- [ ] Compare software and FPGA implementations under controlled conditions.
+- [ ] Analyze timing and maximum operating frequency.
+- [ ] Optimize datapath and memory organization.
+- [ ] Implement the design on an FPGA board.
+- [ ] Validate hardware outputs.
+- [ ] Perform controlled software-versus-FPGA benchmarking.
 
-### Phase 4 — Real astronomical data
+### 🔭 Phase 4: Real Astronomical Data
 
-- [ ] Obtain Kepler light curves from NASA's MAST archive.
-- [ ] Compare candidate detections against published exoplanet parameters.
-- [ ] Test the workflow on TESS observations.
-- [ ] Evaluate detection completeness, false positives, and robustness.
-- [ ] Assess the effect of stellar variability, missing samples, and measurement noise.
+- [ ] Obtain Kepler light curves from NASA MAST.
+- [ ] Compare candidate detections with published planet parameters.
+- [ ] Extend validation to TESS observations.
+- [ ] Evaluate detection completeness and false-positive rates.
+- [ ] Investigate missing samples, stellar variability, and measurement noise.
 
-### Phase 5 — ASIC-oriented design-space exploration
+### 🏭 Phase 5: ASIC Design-Space Exploration
 
-- [ ] Define a synthesizable hardware architecture suitable for ASIC evaluation.
-- [ ] Compare resource and timing trade-offs across numerical precisions.
-- [ ] Investigate parallel versus resource-shared architectures.
-- [ ] Explore memory organization and datapath pipelining.
-- [ ] Run standard-cell synthesis using an available technology library.
+- [ ] Develop an ASIC-suitable RTL architecture.
+- [ ] Evaluate alternative numerical precisions.
+- [ ] Compare parallel and resource-shared architectures.
+- [ ] Investigate pipelining and memory-access trade-offs.
+- [ ] Perform standard-cell synthesis using an available technology library.
 - [ ] Evaluate area, timing, and power estimates.
-- [ ] Perform physical-design evaluation where the required tools and libraries are available.
+- [ ] Explore physical design where the required tools and libraries are available.
 
-## 8. Planned Data and Reference Resources
+## 🌐 8. Research Resources
 
-- **NASA MAST:** https://archive.stsci.edu/
-- **NASA Exoplanet Archive:** https://exoplanetarchive.ipac.caltech.edu/
-- **Astropy Box Least Squares:** https://docs.astropy.org/en/stable/timeseries/bls.html
-- **Lightkurve:** https://lightkurve.github.io/lightkurve/
-- **Xilinx Vivado Design Suite:** https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vivado.html
+- 🔭 **NASA MAST Archive:** https://archive.stsci.edu/
+- 🪐 **NASA Exoplanet Archive:** https://exoplanetarchive.ipac.caltech.edu/
+- 📚 **Astropy BLS Documentation:** https://docs.astropy.org/en/stable/timeseries/bls.html
+- 📈 **Lightkurve Documentation:** https://lightkurve.github.io/
+- 🧰 **AMD Xilinx Vivado:** https://www.amd.com/en/products/software/adaptive-socs-and-fpgas/vivado.html
 
-Real-data validation and FPGA board testing are planned activities, not established outcomes of the initial synthetic experiment.
+## 🧠 9. Research Questions
 
-## 9. Research Questions
+1. 🎯 How accurately can hardware recover injected orbital periods and transit depths?
+2. 🔢 How does fixed-point precision affect accuracy and hardware utilization?
+3. ⚡ What are the trade-offs between parallel period evaluation and resource sharing?
+4. ⏱️ How do pipelining and memory organization affect latency and throughput?
+5. 📊 How does resource utilization scale with observations, trial periods, and durations?
+6. 🏭 Which architecture offers a practical foundation for ASIC implementation?
+7. 🔭 How well do synthetic-data results generalize to real Kepler and TESS observations?
 
-The project will investigate the following questions:
+## ⚠️ 10. Limitations
 
-1. How accurately can a hardware-oriented transit-search implementation recover an injected orbital period and transit depth?
-2. How does fixed-point precision affect detection accuracy and hardware cost?
-3. What is the trade-off between parallel period evaluation and resource sharing?
-4. How do pipelining, memory access, and candidate-selection logic affect latency and throughput?
-5. How do FPGA resource requirements change with the number of observations, trial periods, and trial durations?
-6. Which architecture offers a practical starting point for ASIC implementation?
-7. How does performance on synthetic data compare with performance on real astronomical light curves?
+- 🧪 Current experiments use synthetic data.
+- 📚 The Python baseline is a simplified BLS-style implementation that still requires independent validation.
+- 🎯 A single successful period recovery does not establish general detection reliability.
+- 💻 RTL simulation does not prove FPGA board-level performance.
+- ⚖️ Python runtime and FPGA latency require controlled benchmarking before comparison.
+- 📊 Hardware metrics must be supported by actual synthesis, timing, and power reports.
+- 🔍 Research novelty requires a systematic literature review.
 
-## 10. Limitations and Scope
+## 🙌 Acknowledgements
 
-- The current experiment uses synthetic data.
-- The Python implementation is a simplified BLS-style educational baseline and has not yet been independently validated against Astropy BLS.
-- The initial period recovery result does not establish general detection reliability.
-- RTL simulation is not equivalent to FPGA board validation.
-- Python runtime cannot be compared directly with FPGA latency without a controlled benchmark using equivalent workloads.
-- Hardware metrics must be supported by synthesis, timing, and power reports.
-- ASIC feasibility and research novelty require further investigation and supporting evidence.
-
-## Acknowledgements
-
-This project is an independent learning and research effort at the intersection of astronomy, signal processing, Verilog RTL design, and digital hardware acceleration.
+This independent research and learning project combines **astronomy, signal processing, Verilog RTL design, FPGA acceleration, and ASIC-oriented hardware exploration**.
 
 NASA MAST, the NASA Exoplanet Archive, Astropy, and Lightkurve are planned resources for future scientific validation.
 
 ---
 
-**Project focus:** Verilog RTL implementation → Vivado verification → FPGA acceleration → ASIC-oriented design-space exploration.
+### 🚀 Project Focus
+
+**🌌 Astronomy → 💻 Verilog RTL → 🧪 Vivado Verification → ⚡ FPGA Acceleration → 🏭 ASIC Design Exploration**
